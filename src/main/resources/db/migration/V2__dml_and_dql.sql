@@ -5,101 +5,109 @@ VALUES ('PROGRAMMING');
 INSERT INTO topic (topic_title)
 VALUES ('CHEMISTRY');
 
-INSERT INTO subtopic (subtopic_title, topic_id)
-VALUES ('COLOR', 1);
-INSERT INTO subtopic (subtopic_title, topic_id)
-VALUES ('ANIMAL', 1);
-INSERT INTO subtopic (subtopic_title, topic_id)
-VALUES ('VEGETABLES', 1);
-
-INSERT INTO subtopic (subtopic_title, topic_id)
-VALUES ('JAVA', 2);
-INSERT INTO subtopic (subtopic_title, topic_id)
-VALUES ('C', 2);
-INSERT INTO subtopic (subtopic_title, topic_id)
-VALUES ('PYTHON', 2);
-
-INSERT INTO subtopic (subtopic_title, topic_id)
-VALUES ('ORGANIC', 3);
-INSERT INTO subtopic (subtopic_title, topic_id)
-VALUES ('INORGANIC', 3);
-
-INSERT INTO quiz (question, answer, is_remembered, subtopic_id)
+INSERT INTO quiz (question, answer, is_remembered, topic_id)
 VALUES ('RED', 'КРАСНЫЙ', false, 1);
-INSERT INTO quiz (question, answer, is_remembered, subtopic_id)
+INSERT INTO quiz (question, answer, is_remembered, topic_id)
 VALUES ('BLACK', 'ЧЕРНЫЙ', false, 1);
-INSERT INTO quiz (question, answer, is_remembered, subtopic_id)
+INSERT INTO quiz (question, answer, is_remembered, topic_id)
 VALUES ('YELLOW', 'ЖЕЛТЫЙ', false, 1);
 
-INSERT INTO quiz (question, answer, is_remembered, subtopic_id)
-VALUES ('DOG', 'СОБАКА', true, 2);
-INSERT INTO quiz (question, answer, is_remembered, subtopic_id)
-VALUES ('CAT', 'КОТ', true, 2);
-INSERT INTO quiz (question, answer, is_remembered, subtopic_id)
-VALUES ('HORSE', 'ЛОШАДЬ', false, 2);
+INSERT INTO quiz (question, answer, is_remembered, topic_id)
+VALUES ('DOG', 'СОБАКА', true, 1);
+INSERT INTO quiz (question, answer, is_remembered, topic_id)
+VALUES ('CAT', 'КОТ', true, 1);
+INSERT INTO quiz (question, answer, is_remembered, topic_id)
+VALUES ('HORSE', 'ЛОШАДЬ', false, 1);
 
-INSERT INTO quiz (question, answer, is_remembered, subtopic_id)
-VALUES ('TOMATO', 'ТОМАТ', false, 3);
-INSERT INTO quiz (question, answer, is_remembered, subtopic_id)
-VALUES ('POTATO', 'КАРТОФЕЛЬ', false, 3);
-INSERT INTO quiz (question, answer, is_remembered, subtopic_id)
-VALUES ('PEPPER', 'ПЕРЕЦ', false, 3);
+INSERT INTO quiz (question, answer, is_remembered, topic_id)
+VALUES ('TOMATO', 'ТОМАТ', false, 1);
+INSERT INTO quiz (question, answer, is_remembered, topic_id)
+VALUES ('POTATO', 'КАРТОФЕЛЬ', false, 1);
+INSERT INTO quiz (question, answer, is_remembered, topic_id)
+VALUES ('PEPPER', 'ПЕРЕЦ', false, 1);
 
-INSERT INTO quiz (question, answer, is_remembered, subtopic_id)
-VALUES ('ARRAY', 'МАССИВ', false, 4);
-INSERT INTO quiz (question, answer, is_remembered, subtopic_id)
-VALUES ('LIST', 'ЛИСТ', false, 4);
-INSERT INTO quiz (question, answer, is_remembered, subtopic_id)
-VALUES ('ABSTRACTION', 'АБСТРАКЦИЯ', false, 4);
+INSERT INTO quiz (question, answer, is_remembered, topic_id)
+VALUES ('ARRAY', 'МАССИВ', false, 2);
+INSERT INTO quiz (question, answer, is_remembered, topic_id)
+VALUES ('LIST', 'ЛИСТ', false, 2);
+INSERT INTO quiz (question, answer, is_remembered, topic_id)
+VALUES ('ABSTRACTION', 'АБСТРАКЦИЯ', false, 2);
 
-INSERT INTO quiz (question, answer, is_remembered, subtopic_id)
-VALUES ('REFERENCE', 'ССЫЛКА', false, 5);
-INSERT INTO quiz (question, answer, is_remembered, subtopic_id)
-VALUES ('STRUCT', 'СТРУКТУРА', false, 5);
-INSERT INTO quiz (question, answer, is_remembered, subtopic_id)
-VALUES ('EOF', 'КОНЕЦ ФАЙЛА', false, 5);
+INSERT INTO quiz (question, answer, is_remembered, topic_id)
+VALUES ('REFERENCE', 'ССЫЛКА', false, 2);
+INSERT INTO quiz (question, answer, is_remembered, topic_id)
+VALUES ('STRUCT', 'СТРУКТУРА', false, 2);
+INSERT INTO quiz (question, answer, is_remembered, topic_id)
+VALUES ('EOF', 'КОНЕЦ ФАЙЛА', false, 2);
 
-INSERT INTO quiz (question, answer, is_remembered, subtopic_id)
-VALUES ('С2H5OH', 'СПИРТ', false, 7);
-INSERT INTO quiz (question, answer, is_remembered, subtopic_id)
-VALUES ('H2O', 'ВОДА', false, 7);
+INSERT INTO quiz (question, answer, is_remembered, topic_id)
+VALUES ('С2H5OH', 'СПИРТ', false, 3);
+INSERT INTO quiz (question, answer, is_remembered, topic_id)
+VALUES ('H2O', 'ВОДА', false, 3);
 
-INSERT INTO quiz (question, answer, is_remembered, subtopic_id)
-VALUES ('H2', 'ВОДОРОД', false, 8);
-INSERT INTO quiz (question, answer, is_remembered, subtopic_id)
-VALUES ('Au', 'ЗОЛОТО', false, 8);
-INSERT INTO quiz (question, answer, is_remembered, subtopic_id)
-VALUES ('Na', 'НАТРИЙ', false, 8);
-INSERT INTO quiz (question, answer, is_remembered, subtopic_id)
-VALUES ('Zn', 'ЦИНК', false, 8);
+INSERT INTO quiz (question, answer, is_remembered, topic_id)
+VALUES ('H2', 'ВОДОРОД', false, 3);
+INSERT INTO quiz (question, answer, is_remembered, topic_id)
+VALUES ('Au', 'ЗОЛОТО', false, 3);
+INSERT INTO quiz (question, answer, is_remembered, topic_id)
+VALUES ('Na', 'НАТРИЙ', false, 3);
+INSERT INTO quiz (question, answer, is_remembered, topic_id)
+VALUES ('Zn', 'ЦИНК', false, 3);
 
+-- Список тем
+SELECT t.topic_id    AS id,
+       t.topic_title AS title
+FROM topic as t;
 
-SELECT *
-FROM topic;
+-- Список тем со счётчиками
+SELECT t.topic_id                                      AS id,
+       t.topic_title                                   AS title,
+       count(q.topic_id) FILTER ( WHERE q.is_remembered ) AS learned_count,
+       count(q.topic_id)                                    AS total_count
+FROM topic t
+            LEFT JOIN quiz as q ON t.topic_id = q.topic_id
+GROUP BY t.topic_id;
 
-SELECT *
-FROM subtopic
-WHERE topic_id = 1;
+-- Добавить тему
+INSERT INTO topic (topic_title)
+VALUES (?);
 
-SELECT *
+-- Получить все квизы
+SELECT q.topic_id      AS id,
+       q.question      AS question,
+       q.answer        AS answer,
+       q.is_remembered AS remembered
 FROM quiz q
-WHERE q.is_remembered = 'true';
+WHERE q.topic_id = ?;
 
-SELECT COUNT(*)
-FROM quiz
-WHERE is_remembered = 'true';
-
-SELECT t.topic_title, st.subtopic_title, COUNT(q.question) AS total_questions
+-- Удаление темы
+DELETE
 FROM topic t
-         LEFT JOIN subtopic st on t.topic_id = st.topic_id
-         LEFT JOIN quiz Q on st.subtopic_id = Q.subtopic_id
-GROUP BY t.topic_title, st.subtopic_title
-ORDER BY topic_title;
+WHERE t.topic_id = ?;
 
-SELECT t.topic_title, st.subtopic_title, COUNT(q.is_remembered) AS ready
-FROM topic t
-         LEFT JOIN subtopic st on t.topic_id = st.topic_id
-         LEFT JOIN quiz Q on st.subtopic_id = Q.subtopic_id
-WHERE q.is_remembered = 'true'
-GROUP BY t.topic_title, st.subtopic_title
-ORDER BY topic_title;
+-- Новое задание
+INSERT INTO quiz (topic_id, question, answer, is_remembered)
+VALUES (?, ?, ?, ?);
+
+-- Удаление задания
+DELETE
+FROM quiz q
+WHERE q.quiz_id = 4;
+
+-- Проверка знания 1
+
+SELECT q.quiz_id       AS id,
+       q.question AS question,
+       q.answer   AS answer,
+       q.is_remembered  AS remembered
+FROM quiz q
+WHERE q.quiz_id = ?
+  AND NOT q.is_remembered
+ORDER BY q.quiz_id
+LIMIT 1 OFFSET ?;
+
+-- изменение состояния вопроса
+UPDATE quiz q
+SET is_remembered = TRUE
+WHERE q.quiz_id = 14;
+
