@@ -72,8 +72,8 @@ GROUP BY t.topic_id;
 INSERT INTO topic (topic_title)
 VALUES (?);
 
--- Получить все квизы
-SELECT q.topic_id      AS id,
+-- Получить все квизы по теме
+SELECT q.quiz_id      AS id,
        q.question      AS question,
        q.answer        AS answer,
        q.is_remembered AS remembered
@@ -92,7 +92,7 @@ VALUES (?, ?, ?, ?);
 -- Удаление задания
 DELETE
 FROM quiz q
-WHERE q.quiz_id = 4;
+WHERE q.quiz_id = ?;
 
 -- Проверка знания 1
 
@@ -109,5 +109,5 @@ LIMIT 1 OFFSET ?;
 -- изменение состояния вопроса
 UPDATE quiz q
 SET is_remembered = TRUE
-WHERE q.quiz_id = 14;
+WHERE q.quiz_id = ?;
 
