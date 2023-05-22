@@ -5,11 +5,10 @@ import by.tms.models.Quiz;
 import by.tms.models.Topic;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface FlashCardService {
+public interface CardService {
 
-    Optional<String> getTopicTitleById(Long topicId);
+    String getTopicTitleById(Long topicId);
 
     List<Topic> getTopics();
 
@@ -17,7 +16,7 @@ public interface FlashCardService {
 
     List<Quiz> getAllQuiz(Long topicId);
 
-    Optional<Quiz> getCardByIdAndOffset(Long topicId, int offset);
+    Quiz getCardByIdAndOffset(Long topicId, int offset);
 
     void addNewTopic(String topic);
 
@@ -27,5 +26,5 @@ public interface FlashCardService {
 
     void removeQuiz(Long quizId);
 
-    void updateQuizIsRememberedToTrue(Long quizId);
+    void updateQuizToTrue(Long quizId);
 }

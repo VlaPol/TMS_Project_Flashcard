@@ -1,19 +1,17 @@
 package by.tms.utils;
 
 import com.zaxxer.hikari.HikariConfig;
-import org.postgresql.ds.PGSimpleDataSource;
-
-import javax.sql.DataSource;
 
 public class DBConnection {
 
+    private static final HikariConfig CONFIG = new HikariConfig();
+
     private DBConnection(){}
     public static HikariConfig getHikariConfig(){
-        HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setJdbcUrl(System.getenv("PG_CONNECTION"));
-        hikariConfig.setUsername(System.getenv("PG_USER"));
-        hikariConfig.setPassword(System.getenv("PG_PASSWORD"));
-        return hikariConfig;
+        CONFIG.setJdbcUrl(System.getenv("PG_CONNECTION"));
+        CONFIG.setUsername(System.getenv("PG_USER"));
+        CONFIG.setPassword(System.getenv("PG_PASSWORD"));
+        return CONFIG;
     }
 
 

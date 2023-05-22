@@ -18,8 +18,13 @@ public class CardRepositoryImpl implements CardRepository {
         this.dataSource = dataSource;
     }
 
+    /**
+     * Получение тем по id
+     *
+     * @return Optional<String>
+     */
     @Override
-    public Optional<String> selectTopicTitleById(Long topicId) {
+    public Optional<String> getTopicTitleById(Long topicId) {
 
         String sql = " SELECT topic_title FROM topic WHERE topic_id = ?";
 
@@ -154,7 +159,6 @@ public class CardRepositoryImpl implements CardRepository {
 
             ResultSet rs = statement.executeQuery();
 
-            List<Quiz> topicsList = new ArrayList<>();
             if (rs.next()) {
                 return Optional.of(new Quiz(rs.getLong("id"),
                         rs.getString("question"),
@@ -212,7 +216,7 @@ public class CardRepositoryImpl implements CardRepository {
                 """;
         try (
                 Connection connection = dataSource.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql);
+                PreparedStatement statement = connection.prepareStatement(sql)
         ) {
             statement.setLong(1, topicId);
             statement.executeUpdate();
