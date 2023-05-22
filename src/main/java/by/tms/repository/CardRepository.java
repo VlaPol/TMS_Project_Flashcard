@@ -5,8 +5,11 @@ import by.tms.models.Quiz;
 import by.tms.models.Topic;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CardRepository {
+
+    Optional<String> selectTopicTitleById(Long topicId);
 
     List<Topic> getTopics();
 
@@ -14,15 +17,15 @@ public interface CardRepository {
 
     List<Quiz> getAllQuiz(Long topicId);
 
-    List<Quiz> checkKnowledge(Long topicId, int offset);
+    Optional<Quiz> getCardByIdAndOffset(Long topicId, int offset);
 
     void addNewTopic(String topic);
 
-    void addNewQuiz(Long topic_id, String question, String answer, boolean isRemembered);
+    void addNewQuiz(Long topicId, String question, String answer, boolean isRemembered);
 
     void removeTopic(Long topicId);
 
     void removeQuiz(Long quizId);
 
-    void updateQuizIsRemembered(Long quizId);
+    void updateQuizIsRememberedToTrue(Long quizId);
 }

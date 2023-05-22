@@ -18,7 +18,7 @@ public class CardRepositoryImpl implements CardRepository {
         this.dataSource = dataSource;
     }
 
-
+    @Override
     public Optional<String> selectTopicTitleById(Long topicId) {
 
         String sql = " SELECT topic_title FROM topic WHERE topic_id = ?";
@@ -29,7 +29,6 @@ public class CardRepositoryImpl implements CardRepository {
 
             ResultSet rs = statement.executeQuery();
 
-            String result = null;
             if (rs.next()) {
                 return Optional.of(rs.getString("TOPIC_TITLE"));
             }
@@ -50,7 +49,7 @@ public class CardRepositoryImpl implements CardRepository {
 
         String sql = """
                     SELECT t.topic_id    AS id,
-                            t.topic_title AS title
+                           t.topic_title AS title
                     FROM topic as t;
                 """;
 
@@ -73,9 +72,9 @@ public class CardRepositoryImpl implements CardRepository {
     @Override
     public List<FullTopic> getTopicsWithCounts() {
         String sql = """
-                    SELECT t.topic_id                                      AS id,
-                           t.topic_title                                   AS title,
-                           count(q.topic_id) FILTER ( WHERE q.is_remembered ) AS learned_count,
+                    SELECT t.topic_id                                           AS id,
+                           t.topic_title                                        AS title,
+                           count(q.topic_id) FILTER ( WHERE q.is_remembered )   AS learned_count,
                            count(q.topic_id)                                    AS total_count
                     FROM topic t
                                 LEFT JOIN quiz as q ON t.topic_id = q.topic_id
@@ -104,7 +103,7 @@ public class CardRepositoryImpl implements CardRepository {
     @Override
     public List<Quiz> getAllQuiz(Long topicId) {
         String sql = """
-                    SELECT q.quiz_id      AS id,
+                    SELECT q.quiz_id       AS id,
                            q.question      AS question,
                            q.answer        AS answer,
                            q.is_remembered AS remembered
@@ -134,11 +133,11 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     @Override
-    public List<Quiz> checkKnowledge(Long topicId, int offset) {
+    public Optional<Quiz> getCardByIdAndOffset(Long topicId, int offset) {
         String sql = """
-                    SELECT q.quiz_id       AS id,
-                           q.question AS question,
-                           q.answer   AS answer,
+                    SELECT q.quiz_id        AS id,
+                           q.question       AS question,
+                           q.answer         AS answer,
                            q.is_remembered  AS remembered
                     FROM quiz q
                     WHERE q.quiz_id = ?
@@ -156,13 +155,14 @@ public class CardRepositoryImpl implements CardRepository {
             ResultSet rs = statement.executeQuery();
 
             List<Quiz> topicsList = new ArrayList<>();
-            while (rs.next()) {
-                topicsList.add(new Quiz(rs.getLong("id"),
+            if (rs.next()) {
+                return Optional.of(new Quiz(rs.getLong("id"),
                         rs.getString("question"),
                         rs.getString("answer"),
                         rs.getBoolean("remembered")));
+            } else {
+                return Optional.empty();
             }
-            return topicsList;
 
         } catch (SQLException e) {
             throw new RuntimeException();
@@ -238,7 +238,7 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     @Override
-    public void updateQuizIsRemembered(Long quizId) {
+    public void updateQuizIsRememberedToTrue(Long quizId) {
         String sql = """
                 UPDATE quiz q
                 SET is_remembered = TRUE

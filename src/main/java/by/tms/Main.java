@@ -9,8 +9,9 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
 
-        DataSource connection = DBConnection.getConnection();
-        CardRepositoryImpl ri = new CardRepositoryImpl(connection);
+        DataSource dataSource = DBConnection.getConnection();
+        CardRepositoryImpl ri = new CardRepositoryImpl(dataSource);
+
         System.out.println("Список тем");
         ri.getTopics().stream().forEach(System.out::println);
         System.out.println("--------------------------------");
@@ -28,7 +29,7 @@ public class Main {
         System.out.println("Введите смещение");
         int offset = Integer.parseInt(scanner.nextLine());
         System.out.println("Список вопросов по теме");
-        ri.checkKnowledge(topicId, offset).stream().forEach(System.out::println);
+        ri.getCardByIdAndOffset(topicId, offset).stream().forEach(System.out::println);
         System.out.println("--------------------------------");
         System.out.println("Введите новую тему");
         String topic = scanner.nextLine();
@@ -57,7 +58,7 @@ public class Main {
         System.out.println("--------------------------------");
         System.out.println("Введите id задания которое знаем");
         quizId = Long.parseLong(scanner.nextLine());
-        ri.updateQuizIsRemembered(quizId);
+        ri.updateQuizIsRememberedToTrue(quizId);
         ri.getAllQuiz(3L).stream().forEach(System.out::println);
         System.out.println("--------------------------------");
 
